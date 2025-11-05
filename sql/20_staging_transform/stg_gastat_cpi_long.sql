@@ -10,24 +10,24 @@
 DROP TABLE IF EXISTS stg.gastat_cpi_long;
 
 WITH long_form AS (
-    SELECT item AS item_code, item_desc,
-           '2021_Q1' AS quarter_label, "2021_Q1" AS cpi_index FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2021_Q2', "2021_Q2" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2021_Q3', "2021_Q3" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2021_Q4', "2021_Q4" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2022_Q1', "2022_Q1" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2022_Q2', "2022_Q2" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2022_Q3', "2022_Q3" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2022_Q4', "2022_Q4" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2023_Q1', "2023_Q1" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2023_Q2', "2023_Q2" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2023_Q3', "2023_Q3" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2023_Q4', "2023_Q4" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2024_Q1', "2024_Q1" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2024_Q2', "2024_Q2" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2024_Q3', "2024_Q3" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2024_Q4', "2024_Q4" FROM raw.gastat_cpi_wide
-    UNION ALL SELECT item, item_desc, '2025_Q1', "2025_Q1" FROM raw.gastat_cpi_wide
+    SELECT "Item" AS item_code, "En Basket Rs Desc" AS item_desc,
+           '2021_Q1' AS quarter_label, "2021 / Q1" AS cpi_index FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2021_Q2', "2021 / Q2" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2021_Q3', "2021 / Q3" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2021_Q4', "2021 / Q4" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2022_Q1', "2022 / Q1" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2022_Q2', "2022 / Q2" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2022_Q3', "2022 / Q3" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2022_Q4', "2022 / Q4" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2023_Q1', "2023 / Q1" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2023_Q2', "2023 / Q2" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2023_Q3', "2023 / Q3" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2023_Q4', "2023 / Q4" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2024_Q1', "2024 / Q1" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2024_Q2', "2024 / Q2" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2024_Q3', "2024 / Q3" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2024_Q4', "2024 / Q4" FROM raw.gastat_cpi_wide
+    UNION ALL SELECT "Item", "En Basket Rs Desc", '2025_Q1', "2025 / Q1" FROM raw.gastat_cpi_wide
 ),
 quarter_dates AS (
     SELECT
