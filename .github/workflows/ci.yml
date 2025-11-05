@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: gulf
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python for SQL linting
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install SQL linting tools
+        run: |
+          pip install sqlfluff==2.3.5
+
+      - name: Lint SQL files
+        run: |
+          sqlfluff lint sql/ --dialect postgres --exclude-rules L031,L034,L036 || true
+          echo "SQL linting completed (warnings only, not blocking)"
+
+      - name: Install PostgreSQL client and pgTAP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          # Try to install pgTAP via distribution; fallback to extension from apt
+          sudo apt-get install -y postgresql-13-pgtap || sudo apt-get install -y pgtap
+
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432; do echo "Waiting for postgres..."; sleep 1; done
+
+      - name: Set up database schemas and load raw data
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGDATABASE: gulf
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: |
+          psql -v ON_ERROR_STOP=1 -f sql/00_init/00_create_schemas.sql
+          psql -v ON_ERROR_STOP=1 -f sql/00_init/01_extensions.sql
+          psql -v ON_ERROR_STOP=1 -f sql/10_raw_load/ddl_raw_dld.sql
+          psql -v ON_ERROR_STOP=1 -f sql/10_raw_load/ddl_raw_gastat.sql
+          psql -v ON_ERROR_STOP=1 -c "\copy raw.dld_transactions FROM 'data/dld.csv' WITH (FORMAT csv, HEADER true)"
+          psql -v ON_ERROR_STOP=1 -c "\copy raw.gastat_cpi_wide FROM 'data/gastat.csv' WITH (FORMAT csv, HEADER true)"
+          psql -v ON_ERROR_STOP=1 -f sql/20_staging_transform/stg_dld_transactions.sql
+          psql -v ON_ERROR_STOP=1 -f sql/20_staging_transform/stg_gastat_cpi_long.sql
+          psql -v ON_ERROR_STOP=1 -f sql/30_dw_model/dw_dim_date.sql
+          psql -v ON_ERROR_STOP=1 -f sql/30_dw_model/dw_dim_property.sql
+          psql -v ON_ERROR_STOP=1 -f sql/30_dw_model/dw_dim_project.sql
+          psql -v ON_ERROR_STOP=1 -f sql/30_dw_model/dw_fact_transactions.sql
+          psql -v ON_ERROR_STOP=1 -f sql/30_dw_model/dw_fact_cpi.sql
+          psql -v ON_ERROR_STOP=1 -f sql/99_performance/indexes.sql
+
+      - name: Run pgTAP tests
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGDATABASE: gulf
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: |
+          for test_file in tests/pgtap/*.sql; do
+            echo "Running $test_file"
+            psql -v ON_ERROR_STOP=1 -f "$test_file"
+          done

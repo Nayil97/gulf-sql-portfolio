@@ -1,0 +1,22 @@
+# Byte‑compiled / packaged files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Logs and databases
+*.log
+*.sql~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node and package managers (if extended)
+node_modules/
+
+# Generated reports and Power BI files
+*.pbix
+
+# IDE configurations
+.vscode/
+.idea/
