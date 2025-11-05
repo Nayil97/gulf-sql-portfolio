@@ -64,8 +64,8 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f sql/10_raw_load/ddl_raw_dld.sql
           psql -v ON_ERROR_STOP=1 -f sql/10_raw_load/ddl_raw_gastat.sql
           psql -v ON_ERROR_STOP=1 -c "\copy raw.dld_transactions FROM 'data/dld.csv' WITH (FORMAT csv, HEADER true)"
-          iconv -f UTF-16LE -t UTF-8 data/gastat.csv > /tmp/gastat_utf8.csv
-          psql -v ON_ERROR_STOP=1 -c "\copy raw.gastat_cpi_wide FROM '/tmp/gastat_utf8.csv' WITH (FORMAT csv, HEADER true)"
+          iconv -f UTF-16LE -t UTF-8 data/gastat.csv > /tmp/gastat_utf8.tsv
+          psql -v ON_ERROR_STOP=1 -c "\copy raw.gastat_cpi_wide FROM '/tmp/gastat_utf8.tsv' WITH (FORMAT csv, HEADER true, DELIMITER E'\\t')"
           psql -v ON_ERROR_STOP=1 -f sql/20_staging_transform/stg_dld_transactions.sql
           psql -v ON_ERROR_STOP=1 -f sql/20_staging_transform/stg_gastat_cpi_long.sql
           psql -v ON_ERROR_STOP=1 -f sql/30_dw_model/dw_dim_date.sql
