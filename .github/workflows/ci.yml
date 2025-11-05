@@ -43,9 +43,7 @@ jobs:
       - name: Install PostgreSQL client and pgTAP
         run: |
           sudo apt-get update
-          sudo apt-get install -y postgresql-client
-          # Try to install pgTAP via distribution; fallback to extension from apt
-          sudo apt-get install -y postgresql-13-pgtap || sudo apt-get install -y pgtap
+          sudo apt-get install -y postgresql-client postgresql-13-pgtap
 
       - name: Wait for Postgres
         run: |
