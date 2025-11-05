@@ -14,9 +14,12 @@ Thumbs.db
 # Node and package managers (if extended)
 node_modules/
 
-# Generated reports and Power BI files
-*.pbix
-
 # IDE configurations
 .vscode/
 .idea/
+.editorconfig
+
+# Temporary files
+*.tmp
+*.bak
+*~
