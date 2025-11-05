@@ -1,6 +1,6 @@
 # GCC Real Estate Analytics SQL Project
 
-![CI](https://github.com/sayda/gulf-sql-portfolio/workflows/CI/badge.svg)
+![CI](https://github.com/Nayil97/gulf-sql-portfolio/workflows/CI/badge.svg)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-316192?style=flat&logo=postgresql&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 ![SQL](https://img.shields.io/badge/SQL-Advanced-blue)
